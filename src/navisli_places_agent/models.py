@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import date
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, EmailStr, Field, HttpUrl, field_validator
 
@@ -28,6 +28,23 @@ class PlaceInput(BaseModel):
     source_url: HttpUrl
     retrieved_date: date
     review_notes: str | None = None
+
+    @field_validator(
+        "address_line_1",
+        "postal_area",
+        "eircode",
+        "phone",
+        "email",
+        "website_url",
+        "description",
+        "review_notes",
+        mode="before",
+    )
+    @classmethod
+    def blank_optional_values_to_none(cls, value: Any) -> Any:
+        if isinstance(value, str) and not value.strip():
+            return None
+        return value
 
     @field_validator("public_reference", "primary_category", "subcategory", "source_type")
     @classmethod
