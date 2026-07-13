@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "navisli-places-agent"
+version = "0.1.0"
+description = "Supervised NaviSlí Places data interconnector for Supabase"
+requires-python = ">=3.12"
+dependencies = [
+  "pydantic>=2.8,<3",
+  "supabase>=2.6,<3",
+  "typer>=0.12,<1",
+  "python-dotenv>=1.0,<2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9", "ruff>=0.5,<1"]
+
+[project.scripts]
+navisli-places = "navisli_places_agent.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/navisli_places_agent"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
