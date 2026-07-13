@@ -59,6 +59,15 @@ jobs:
         run: |
           test -n "$SUPABASE_URL" || (echo "SUPABASE_URL secret is missing" && exit 1)
           test -n "$SUPABASE_SERVICE_ROLE_KEY" || (echo "SUPABASE_SERVICE_ROLE_KEY secret is missing" && exit 1)
+          case "$SUPABASE_URL" in
+            https://*.supabase.co|https://*.supabase.co/)
+              ;;
+            *)
+              echo "SUPABASE_URL must be the project base URL, for example https://your-project-ref.supabase.co"
+              echo "Do not use the Supabase dashboard URL and do not append /rest/v1."
+              exit 1
+              ;;
+          esac
 
       - name: Dry-run import
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'dry-run' }}
