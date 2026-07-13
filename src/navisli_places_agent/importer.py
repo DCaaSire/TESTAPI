@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import csv
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from pydantic import ValidationError
@@ -18,6 +18,7 @@ class ImportSummary:
     updated: int = 0
     rejected: int = 0
     review: int = 0
+    validation_errors: list[dict[str, object]] = field(default_factory=list)
 
 
 def import_csv(
@@ -34,12 +35,19 @@ def import_csv(
         batch_id = repository.create_import_batch(path.name, source_name)
 
     with path.open("r", encoding="utf-8-sig", newline="") as handle:
-        for row in csv.DictReader(handle):
+        for row_number, row in enumerate(csv.DictReader(handle), start=2):
             summary.received += 1
             try:
                 place = PlaceInput.model_validate(row)
-            except ValidationError:
+            except ValidationError as exc:
                 summary.rejected += 1
+                summary.validation_errors.append(
+                    {
+                        "row": row_number,
+                        "public_reference": row.get("public_reference"),
+                        "errors": exc.errors(include_url=False, include_input=False),
+                    }
+                )
                 continue
 
             if dry_run:
