@@ -47,7 +47,7 @@ jobs:
       - name: Validate starter CSV on pull request
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          navisli-places import-csv "data/navisli_places.csv" \
+          navisli-places "data/navisli_places.csv" \
             --source-name "NaviSli starter dataset" \
             --dry-run
 
@@ -63,7 +63,7 @@ jobs:
       - name: Dry-run import
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'dry-run' }}
         run: |
-          navisli-places import-csv "${{ inputs.csv_path }}" \
+          navisli-places "${{ inputs.csv_path }}" \
             --source-name "NaviSli starter dataset" \
             --dry-run
 
@@ -73,6 +73,6 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          navisli-places import-csv "${{ inputs.csv_path }}" \
+          navisli-places "${{ inputs.csv_path }}" \
             --source-name "NaviSli starter dataset" \
             --write
