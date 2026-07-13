@@ -1,0 +1,3 @@
+public_reference,name,primary_category,subcategory,address_line_1,postal_area,eircode,phone,email,website_url,description,status,source_type,verification_status,source_name,source_url,retrieved_date,review_notes
+NAV-POI-000005,Sandyford Luas Stop,transport_stop,luas_stop,Sandyford,Dublin 18,,,,,Luas Green Line stop,active,official_source,verified,Luas,https://www.luas.ie/luas-green-line-stops/,2026-07-13,Existing-record safety test
+NAV-POI-000014,Beacon Hospital,healthcare,hospital,"Beacon Court, Sandyford Business District",Dublin 18,,,,,Private hospital and major local destination,active,organisation_website,review_required,Beacon Hospital,https://www.beaconhospital.ie/,2026-07-13,Existing-record safety test
