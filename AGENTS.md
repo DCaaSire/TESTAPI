@@ -1,25 +1,14 @@
 # NaviSlí Places Data Agent Instructions
 
-## Scope
-Build a supervised data interconnector for importing structured Places records into Supabase.
+## Purpose
+Build a supervised data interconnector that validates place records, detects duplicates, writes safe records to Supabase, and routes uncertain records to review.
 
-## Non-negotiable rules
-- Never scrape or publish uncontrolled web data.
+## Rules
+- Use Python 3.12.
+- Never commit secrets.
 - Never overwrite a verified place automatically.
-- Every accepted record must retain source attribution and lineage.
-- Ambiguous, duplicate, conflicting, or low-confidence records go to the review queue.
-- Supabase credentials must come from environment variables and must never be committed.
-- Support dry-run mode for every import path.
-- Add tests for validation, duplicate decisions, and import summaries.
-- Prefer explicit deterministic rules over AI inference in the first release.
-
-## Technical baseline
-- Python 3.12
-- Pydantic v2
-- Typer CLI
-- supabase-py
-- pytest
-- Ruff
-
-## Definition of done
-A change is complete only when tests pass, documentation is updated, errors are handled, and no secret or placeholder production logic is committed.
+- Preserve source attribution and lineage for every accepted record.
+- Support dry-run mode for all imports.
+- Do not add web scraping or external AI API calls in the initial build.
+- Keep transformations deterministic and covered by tests.
+- Use commas rather than em dashes in documentation.
