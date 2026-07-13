@@ -25,6 +25,15 @@ def test_valid_place() -> None:
     assert place.public_reference == "NAV-POI-000001"
 
 
+def test_blank_optional_csv_values_become_none() -> None:
+    payload = valid_place()
+    payload.update({"email": "", "website_url": "", "phone": "   "})
+    place = PlaceInput.model_validate(payload)
+    assert place.email is None
+    assert place.website_url is None
+    assert place.phone is None
+
+
 def test_rejects_missing_source() -> None:
     payload = valid_place()
     payload["source_name"] = ""
