@@ -1,6 +1,9 @@
 name: Import NaviSli Places
 
 on:
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       mode:
@@ -41,8 +44,15 @@ jobs:
           pytest
           ruff check .
 
+      - name: Validate starter CSV on pull request
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          navisli-places import-csv "data/navisli_places.csv" \
+            --source-name "NaviSli starter dataset" \
+            --dry-run
+
       - name: Validate required secrets for write mode
-        if: ${{ inputs.mode == 'write' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'write' }}
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -51,14 +61,14 @@ jobs:
           test -n "$SUPABASE_SERVICE_ROLE_KEY" || (echo "SUPABASE_SERVICE_ROLE_KEY secret is missing" && exit 1)
 
       - name: Dry-run import
-        if: ${{ inputs.mode == 'dry-run' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'dry-run' }}
         run: |
           navisli-places import-csv "${{ inputs.csv_path }}" \
             --source-name "NaviSli starter dataset" \
             --dry-run
 
       - name: Write import to Supabase
-        if: ${{ inputs.mode == 'write' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'write' }}
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
